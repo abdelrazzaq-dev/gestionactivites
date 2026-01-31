@@ -6,6 +6,10 @@ A simple desktop app to manage classroom activities and track student participat
 
 This app helps professors organize their teaching activities - creating assignments, tracking who participated, grading students, and getting some stats on how things are going. Nothing fancy, just the basics done right.
 
+## Demo
+
+https://github.com/user-attachments/assets/fbcae29f-623d-42d9-b909-4f74a679b045
+
 ## Quick Start
 
 You need Java 21 and Maven installed. Then:
