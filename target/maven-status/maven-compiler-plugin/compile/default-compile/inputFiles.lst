@@ -8,6 +8,8 @@
 /home/abderrazzak/NetBeansProjects/gestionactivites/src/main/java/com/fst/gestionactivites/gui/pannels/ParticipationDialog.java
 /home/abderrazzak/NetBeansProjects/gestionactivites/src/main/java/com/fst/gestionactivites/gui/pannels/ParticipationPanel.java
 /home/abderrazzak/NetBeansProjects/gestionactivites/src/main/java/com/fst/gestionactivites/gui/pannels/StatisticsPanel.java
+/home/abderrazzak/NetBeansProjects/gestionactivites/src/main/java/com/fst/gestionactivites/gui/pannels/StudentDialog.java
+/home/abderrazzak/NetBeansProjects/gestionactivites/src/main/java/com/fst/gestionactivites/gui/pannels/StudentPanel.java
 /home/abderrazzak/NetBeansProjects/gestionactivites/src/main/java/com/fst/gestionactivites/model/Activity.java
 /home/abderrazzak/NetBeansProjects/gestionactivites/src/main/java/com/fst/gestionactivites/model/Student.java
 /home/abderrazzak/NetBeansProjects/gestionactivites/src/main/java/com/fst/gestionactivites/model/StudentParticipation.java

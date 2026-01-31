@@ -7,6 +7,7 @@ package com.fst.gestionactivites.gui;
 import com.fst.gestionactivites.gui.pannels.ActivitiesPanel;
 import com.fst.gestionactivites.gui.pannels.ParticipationPanel;
 import com.fst.gestionactivites.gui.pannels.StatisticsPanel;
+import com.fst.gestionactivites.gui.pannels.StudentPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -34,6 +35,7 @@ public class MainFrame extends javax.swing.JFrame {
     private ActivitiesPanel activitiesPanel;
     private ParticipationPanel participationPanel;
     private StatisticsPanel statisticsPanel;
+    private StudentPanel studentPanel;
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainFrame.class.getName());
 
@@ -67,9 +69,11 @@ public class MainFrame extends javax.swing.JFrame {
         activitiesPanel = new ActivitiesPanel();
         participationPanel = new ParticipationPanel();
         statisticsPanel = new StatisticsPanel();
+        studentPanel = new StudentPanel();
 
         // Add panels to tabbed pane
         tabbedPane.addTab("📚 Activités", new ImageIcon(), activitiesPanel, "Gérer les activités pédagogiques");
+        tabbedPane.addTab("🎓 Étudiants", new ImageIcon(), studentPanel, "Gérer les étudiants");
         tabbedPane.addTab("👥 Participation", new ImageIcon(), participationPanel, "Suivre la participation des étudiants");
         tabbedPane.addTab("📊 Statistiques", new ImageIcon(), statisticsPanel, "Analyser les statistiques d'engagement");
 

@@ -27,6 +27,9 @@ com/fst/gestionactivites/model/Student.class
 com/fst/gestionactivites/gui/LoginDialog$1.class
 com/fst/gestionactivites/model/StudentParticipation.class
 com/fst/gestionactivites/model/Student$AcademicLevel.class
+com/fst/gestionactivites/gui/pannels/StudentDialog.class
+com/fst/gestionactivites/gui/pannels/StudentPanel.class
 com/fst/gestionactivites/model/Activity$ActivityStatus.class
 com/fst/gestionactivites/gui/pannels/ParticipationPanel.class
+com/fst/gestionactivites/gui/pannels/StudentPanel$1.class
 com/fst/gestionactivites/model/Activity$ActivityType.class
