@@ -1,192 +1,243 @@
 # Gestion des Activités Pédagogiques
 
-Un système complet pour organiser, suivre et analyser les activités pédagogiques et la participation des étudiants.
+A simple desktop app to manage classroom activities and track student participation. Built with Java Swing and Hibernate.
 
-## 📋 Fonctionnalités Implémentées
+## What does it do?
 
-### ✅ Authentification et Sécurité
-- [x] Connexion sécurisée avec BCrypt
-- [x] Gestion des sessions utilisateur
-- [x] Réinitialisation de mot de passe par email
-- [x] Trois rôles d'utilisateur (Admin, Professeur, Étudiant)
+This app helps professors organize their teaching activities - creating assignments, tracking who participated, grading students, and getting some stats on how things are going. Nothing fancy, just the basics done right.
 
-### ✅ Gestion des Activités
-- [x] Création, modification et suppression d'activités
-- [x] Filtrage par statut et type
-- [x] Recherche avancée par titre
-- [x] Multiple types d'activités (Cours, Devoir, Projet, Quiz, etc.)
-- [x] Suivi des échéances
+## Quick Start
 
-### ✅ Gestion des Participations
-- [x] Inscription des étudiants aux activités
-- [x] Saisie des notes et feedbacks
-- [x] Filtrage des participants par activité
-- [x] Calcul automatique des taux de participation
-- [x] Calcul des moyennes
+You need Java 21 and Maven installed. Then:
 
-### ✅ Statistiques et Rapports
-- [x] Taux de participation global
-- [x] Moyennes générales des notes
-- [x] Graphiques (camembert et barres) avec JFreeChart
-- [x] Répartition des activités par type et statut
-- [x] Statistiques par activité
-
-## 🗃️ Base de Données
-
-### Tables Implémentées
-- **users**: Gestion des utilisateurs (login, password hash, email, role, status)
-- **students**: Informations des étudiants (matricule, nom, email, département, etc.)
-- **activities**: Activités pédagogiques (titre, description, type, statut, professeur, échéance)
-- **student_participations**: Participation des étudiants (étudiant, activité, note, feedback)
-
-### Technologies
-- **H2 Database**: Base de données embarquée pour le développement
-- **Hibernate/JPA**: ORM pour la persistance des données
-- **MySQL Support**: Configuration disponible pour la production
-
-## 🚀 Installation et Exécution
-
-### Prérequis
-- Java 21 ou supérieur
-- Maven 3.6+
-
-### Compilation
 ```bash
+# Compile and run
 mvn clean compile
-```
-
-### Exécution
-```bash
 mvn exec:java
 ```
 
-Ou avec NetBeans:
-- Clic droit sur le projet → Run
+Login with:
+- Username: `admin`
+- Password: `admin123`
 
-### Compte par défaut
-- **Login**: admin
-- **Password**: admin123
-- **Role**: Administrateur
+The app will create a local H2 database in your home folder and populate it with some test data so you can play around.
 
-## 📁 Structure du Projet
+## How it works
+
+```mermaid
+flowchart LR
+    A[Login] --> B[Main Dashboard]
+    B --> C[Activities]
+    B --> D[Students]
+    B --> E[Participation]
+    B --> F[Statistics]
+
+    C --> C1[Create/Edit/Delete]
+    C --> C2[Search & Filter]
+
+    D --> D1[Manage Students]
+    D --> D2[Student Info]
+
+    E --> E1[Record Participation]
+    E --> E2[Add Grades]
+
+    F --> F1[Charts]
+    F --> F2[Reports]
+```
+
+## Database Schema
+
+```mermaid
+erDiagram
+    USER ||--o{ STUDENT : "may have"
+    STUDENT ||--o{ STUDENT_PARTICIPATION : "has many"
+    ACTIVITY ||--o{ STUDENT_PARTICIPATION : "has many"
+
+    USER {
+        long id
+        string login
+        string password
+        string email
+        enum role
+        enum status
+    }
+
+    STUDENT {
+        long id
+        string registrationNumber
+        string firstName
+        string lastName
+        string email
+        string department
+        enum academicLevel
+    }
+
+    ACTIVITY {
+        long id
+        string title
+        string description
+        enum type
+        enum status
+        string professor
+        date deadline
+    }
+
+    STUDENT_PARTICIPATION {
+        long id
+        long studentId
+        long activityId
+        boolean participated
+        double score
+        string feedback
+    }
+```
+
+## Features
+
+### What's working:
+- **Login system** - BCrypt password hashing, session management
+- **Activity management** - Create lectures, projects, quizzes, exams, etc.
+- **Student records** - Keep track of student info and enrollment
+- **Participation tracking** - Who showed up, who did the work
+- **Grading** - Add scores and feedback
+- **Search & filters** - Find what you need quickly
+- **Statistics** - See participation rates and average scores
+- **Charts** - Pie charts and bar graphs using JFreeChart
+
+### Activity workflow:
+
+```mermaid
+stateDiagram-v2
+    [*] --> Planned
+    Planned --> InProgress: Start activity
+    InProgress --> Completed: Finish & grade
+    InProgress --> Cancelled: Cancel
+    Completed --> [*]
+    Cancelled --> [*]
+```
+
+## Project Structure
 
 ```
 src/main/java/com/fst/gestionactivites/
-├── GestionActivites.java          # Point d'entrée
-├── model/                          # Entités JPA
-│   ├── User.java
-│   ├── Student.java
-│   ├── Activity.java
-│   └── StudentParticipation.java
-├── repository/                     # Repositories (DAO)
+│
+├── GestionActivites.java              # Entry point
+│
+├── model/                             # Database entities
+│   ├── User.java                      # Login accounts
+│   ├── Student.java                   # Student records
+│   ├── Activity.java                  # Activities (lectures, quizzes, etc)
+│   └── StudentParticipation.java     # Who participated + grades
+│
+├── repository/                        # Database queries
 │   ├── UserRepository.java
 │   ├── StudentRepository.java
 │   ├── ActivityRepository.java
 │   └── ParticipationRepository.java
-├── service/                        # Services métier
-│   ├── AuthenticationService.java
-│   └── EmailService.java
-├── data/                           # Gestion des données
-│   ├── DatabaseManager.java
-│   └── DataManager.java
-└── gui/                            # Interface utilisateur
+│
+├── service/                           # Business logic
+│   ├── AuthenticationService.java    # Login/logout
+│   ├── EmailService.java             # Password reset emails
+│   └── DataInitializationService.java # Test data
+│
+├── data/
+│   └── DatabaseManager.java          # JPA setup
+│
+└── gui/                               # Swing UI
     ├── LoginDialog.java
     ├── MainFrame.java
     └── pannels/
-        ├── ActivitiesPanel.java
+        ├── ActivitiesPanel.java       # Activity CRUD
         ├── ActivityDialog.java
-        ├── ParticipationPanel.java
+        ├── StudentPanel.java          # Student management
+        ├── StudentDialog.java
+        ├── ParticipationPanel.java    # Track participation
         ├── ParticipationDialog.java
-        └── StatisticsPanel.java
+        └── StatisticsPanel.java       # Charts & reports
 ```
 
-## 🔧 Configuration
+## Tech Stack
 
-### Base de Données H2
-La base de données H2 est stockée dans votre répertoire home:
-```
-~/gestionactivites.mv.db
-```
+- **Java 21** - because why not use the latest LTS
+- **Swing** - yeah it's old school, but it works
+- **Hibernate 6.4** - ORM magic for database stuff
+- **H2** - embedded database, perfect for dev
+- **JFreeChart** - for those nice looking graphs
+- **BCrypt** - password hashing done right
+- **FlatLaf** - makes Swing look decent in 2024
+- **Maven** - dependency management
 
-### Configuration MySQL (Production)
-Pour utiliser MySQL en production, modifiez `persistence.xml`:
+## Configuration
+
+### Database
+
+By default, it uses H2 and stores data at `~/gestionactivites.mv.db`.
+
+Want to use MySQL instead? Edit `src/main/resources/META-INF/persistence.xml`:
+
 ```xml
 <property name="jakarta.persistence.jdbc.url"
           value="jdbc:mysql://localhost:3306/gestionactivites"/>
 <property name="jakarta.persistence.jdbc.user" value="root"/>
-<property name="jakarta.persistence.jdbc.password" value="password"/>
+<property name="jakarta.persistence.jdbc.password" value="your_password"/>
 ```
 
-### Logs
-Les logs sont sauvegardés dans:
+### Email Setup
+
+Password reset emails are disabled by default (they just log to console). To enable real emails, edit `EmailService.java` and configure your SMTP server.
+
+## User Flow
+
+```mermaid
+sequenceDiagram
+    actor Prof as Professor
+    participant App
+    participant DB as Database
+
+    Prof->>App: Login
+    App->>DB: Verify credentials
+    DB-->>App: OK
+    App-->>Prof: Show dashboard
+
+    Prof->>App: Create activity
+    App->>DB: Save activity
+    App->>DB: Create participation records
+    DB-->>App: Done
+
+    Prof->>App: Record participation
+    App->>DB: Update participation
+    App->>DB: Calculate stats
+    DB-->>App: Stats
+    App-->>Prof: Show updated view
 ```
-logs/gestionactivites.log
-```
 
-## 📊 Utilisation
+## What's in the test data?
 
-### 1. Connexion
-Au lancement, une fenêtre de connexion s'affiche. Utilisez le compte admin par défaut.
+When you first run it, the app creates:
+- 15 fake students (Ahmed, Fatima, Mohamed, etc.)
+- 12 sample activities (lectures, quizzes, projects)
+- Participation records for all students
+- Some random grades to make it look real
 
-### 2. Gestion des Activités
-- Onglet "Activités" pour créer, modifier, supprimer des activités
-- Utilisez les filtres pour rechercher des activités spécifiques
-- Double-cliquez pour voir les détails
+## Tips
 
-### 3. Gestion des Participations
-- Onglet "Participations" pour gérer la participation des étudiants
-- Sélectionnez une activité pour voir tous les participants
-- Modifiez les notes et feedbacks
+- Search works on activity titles and student names
+- Filters are cumulative (you can combine type + status)
+- Double-click table rows to edit
+- Stats refresh automatically when you change data
+- The database file can be deleted to reset everything
 
-### 4. Statistiques
-- Onglet "Statistiques" pour visualiser les graphiques et rapports
-- Taux de participation par activité
-- Répartition des activités par type
+## Known Issues
 
-## 🔐 Sécurité
+- No user registration UI (use the default admin account)
+- Email service needs manual configuration
+- No export to Excel/PDF (yet)
+- Swing can feel sluggish on some systems
 
-- Mots de passe hashés avec BCrypt (12 rounds)
-- Validation des entrées utilisateur
-- Gestion des sessions
-- Support de la réinitialisation de mot de passe
+## License
 
-## 📧 Email (Configuration requise)
+Academic project for FST. Feel free to use it for learning.
 
-Pour activer l'envoi d'emails pour la réinitialisation de mot de passe:
-1. Éditez `EmailService.java`
-2. Configurez les paramètres SMTP
-3. Décommentez le code d'envoi réel
+## Contributing
 
-## 🎨 Interface
-
-- **Look and Feel**: FlatLaf (moderne et professionnel)
-- **Couleurs**: Interface épurée avec thème clair
-- **Graphiques**: JFreeChart pour les visualisations
-- **Responsive**: Interface adaptable
-
-## 📝 Données de Test
-
-Le système génère automatiquement:
-- 15 étudiants fictifs
-- 4 activités exemples
-- Données de participation pour démonstration
-
-## 🛠️ Technologies Utilisées
-
-- **Java 21**: Langage de programmation
-- **Swing**: Interface graphique
-- **Hibernate 6.4**: ORM
-- **H2 Database**: Base de données embarquée
-- **JFreeChart**: Graphiques et statistiques
-- **BCrypt**: Hashage de mots de passe
-- **SLF4J + Logback**: Logging
-- **Maven**: Gestion de dépendances
-- **FlatLaf**: Look and Feel moderne
-
-## 📄 Licence
-
-Projet académique - FST
-
-## 👥 Auteur
-
-Développé pour la gestion des activités pédagogiques à la FST
+This is a class project, but if you find bugs or have ideas, go ahead and fork it.
